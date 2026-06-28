@@ -36,7 +36,7 @@ jobs:
   preflight:
     name: Pre-flight checks
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     concurrency:
       group: dev-release
       cancel-in-progress: false
@@ -189,7 +189,7 @@ jobs:
     name: Create dev release tag
     needs: preflight
     if: needs.preflight.outputs.should_release == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     concurrency:
       group: dev-release
       cancel-in-progress: false
@@ -235,7 +235,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, windows-latest, macos-latest]
+        os: [ubuntu-22.04]
         python_version: [3.9]
         node_version: [22]
         skip_rust: [false]
@@ -618,7 +618,7 @@ jobs:
   release-notes:
     name: Generate release notes
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
         with:
@@ -662,7 +662,7 @@ jobs:
     name: Publish draft release
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     needs: [build-qt, build-tauri, release-notes]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v8
